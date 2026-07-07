@@ -1,0 +1,52 @@
+# ============================================================
+# Scenario 3: Deadly Corridor (SHOWCASE SCENARIO)
+# Navigate a corridor with enemies on both sides.
+# Must MOVE forward AND fight simultaneously.
+# Requires reward shaping — raw game score not enough.
+# ============================================================
+
+scenario:
+  name: deadly_corridor
+  wad_file: deadly_corridor.wad
+  description: "Navigate corridor while fighting — navigation + combat"
+  difficulty: 5
+
+environment:
+  screen_width: 160
+  screen_height: 120
+  frame_skip: 4
+  stack_frames: 4
+  grayscale: true
+
+training:
+  total_episodes: 3000            # Most episodes — hardest scenario
+  max_steps_per_episode: 2000
+
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay_steps: 150000
+
+  replay_buffer_size: 50000
+  batch_size: 32
+  learning_starts: 10000
+
+  gamma: 0.99
+  learning_rate: 0.00025
+  target_network_update_freq: 1000
+
+# Reward shaping weights (explained in full when we build the environment wrapper)
+reward_shaping:
+  kill_reward: 1.0               # +1 for each enemy killed
+  death_penalty: -1.0            # -1 for dying
+  progress_reward_scale: 0.01    # small +reward for moving toward goal
+  ammo_waste_penalty: -0.05      # slight penalty for shooting without hitting
+
+model:
+  save_dir: models/deadly_corridor/
+  save_every: 100
+  checkpoint_name: dqn_corridor
+
+logging:
+  mlflow_experiment: "DoomRL-DeadlyCorridor"
+  log_every: 10
+  log_dir: logs/deadly_corridor/

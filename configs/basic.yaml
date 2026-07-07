@@ -1,0 +1,47 @@
+# ============================================================
+# Scenario 1: Basic
+# Single room, single enemy, single gun.
+# Goal: Agent learns to turn toward and shoot the enemy.
+# ============================================================
+
+scenario:
+  name: basic
+  wad_file: basic.wad            # ViZDoom scenario file
+  description: "Single enemy, single room — turn and shoot"
+  difficulty: 1
+
+environment:
+  screen_width: 160              # Raw game resolution (we'll resize to 84x84)
+  screen_height: 120
+  frame_skip: 4                  # Agent acts every 4 frames (speeds up training)
+  stack_frames: 4                # Stack 4 consecutive frames as input
+  grayscale: true                # Convert to grayscale (reduces input complexity)
+
+training:
+  total_episodes: 1000
+  max_steps_per_episode: 300
+
+  # Epsilon-greedy exploration schedule
+  epsilon_start: 1.0             # Start fully random
+  epsilon_end: 0.01              # End at 1% random (mostly exploiting)
+  epsilon_decay_steps: 50000     # Frames over which epsilon decays
+
+  # Experience replay
+  replay_buffer_size: 10000      # Store this many past experiences
+  batch_size: 32                 # Learn from 32 random experiences at a time
+  learning_starts: 1000          # Don't learn until we have 1000 experiences
+
+  # DQN core
+  gamma: 0.99                    # Discount factor (how much future rewards matter)
+  learning_rate: 0.0001
+  target_network_update_freq: 1000  # Sync target network every 1000 steps
+
+model:
+  save_dir: models/basic/
+  save_every: 100                # Save checkpoint every 100 episodes
+  checkpoint_name: dqn_basic
+
+logging:
+  mlflow_experiment: "DoomRL-Basic"
+  log_every: 10                  # Log stats every 10 episodes
+  log_dir: logs/basic/

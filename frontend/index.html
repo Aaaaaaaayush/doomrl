@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoomRL Tactical AI Console</title>
+    <link rel="stylesheet" href="style.css" id="crt-overlay">
+</head>
+<body class="crt-flicker">
+
+    <div class="container">
+        
+        <!-- SECTION 1: HERO PANEL -->
+        <header class="hud-panel hero-panel">
+            <h1 class="hero-title">DOOM-RL TACTICAL MONITOR</h1>
+            <p class="hero-tagline">Teaching an AI to Survive Doom — From Random Chaos to Combat Proficiency</p>
+            <div class="hero-showcase-container">
+                <img src="/videos/corridor_showcase.gif" alt="Deadly Corridor Showcase" class="hero-showcase-gif">
+            </div>
+        </header>
+
+        <!-- SECTION 2: SCENARIO SELECTOR -->
+        <section class="hud-panel green-glow">
+            <h2 style="margin-bottom: 20px; font-size: 1rem; color: var(--terminal-green);">[LEVEL_SELECT_SCREEN]</h2>
+            <div class="selector-grid">
+                
+                <!-- CARD 1: BASIC -->
+                <div class="hud-panel level-card active" id="card-basic" onclick="selectScenario('basic')">
+                    <div class="level-header">
+                        <h3 class="level-title">SCENARIO_1: BASIC</h3>
+                        <span class="level-difficulty">★☆☆☆☆</span>
+                    </div>
+                    <div class="level-stats">
+                        <div class="level-stat-row"><span>DIFFICULTY</span><span class="level-stat-value">EASY</span></div>
+                        <div class="level-stat-row"><span>TRAINED_EPISODES</span><span class="level-stat-value">1,000</span></div>
+                        <div class="level-stat-row"><span>FINAL_MEAN_REWARD</span><span class="level-stat-value">-11.1</span></div>
+                        <div class="level-stat-row"><span>ACTION_SPACE_SIZE</span><span class="level-stat-value">5 ACTIONS</span></div>
+                    </div>
+                </div>
+
+                <!-- CARD 2: DEFEND THE CENTER -->
+                <div class="hud-panel level-card" id="card-defend" onclick="selectScenario('defend_the_center')">
+                    <div class="level-header">
+                        <h3 class="level-title">SCENARIO_2: DEFEND_CENTER</h3>
+                        <span class="level-difficulty">★★★☆☆</span>
+                    </div>
+                    <div class="level-stats">
+                        <div class="level-stat-row"><span>DIFFICULTY</span><span class="level-stat-value">MEDIUM</span></div>
+                        <div class="level-stat-row"><span>TRAINED_EPISODES</span><span class="level-stat-value">2,000</span></div>
+                        <div class="level-stat-row"><span>FINAL_MEAN_REWARD</span><span class="level-stat-value">+6.9</span></div>
+                        <div class="level-stat-row"><span>ACTION_SPACE_SIZE</span><span class="level-stat-value">5 ACTIONS</span></div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: DEADLY CORRIDOR -->
+                <div class="hud-panel level-card" id="card-corridor" onclick="selectScenario('deadly_corridor')">
+                    <div class="level-header">
+                        <h3 class="level-title">SCENARIO_3: DEADLY_CORRIDOR</h3>
+                        <span class="level-difficulty">★★★★★</span>
+                    </div>
+                    <div class="level-stats">
+                        <div class="level-stat-row"><span>DIFFICULTY</span><span class="level-stat-value">NIGHTMARE</span></div>
+                        <div class="level-stat-row"><span>TRAINED_EPISODES</span><span class="level-stat-value">3,000</span></div>
+                        <div class="level-stat-row"><span>FINAL_MEAN_REWARD</span><span class="level-stat-value">-127.4</span></div>
+                        <div class="level-stat-row"><span>ACTION_SPACE_SIZE</span><span class="level-stat-value">11 ACTIONS</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: LIVE TRAINING DASHBOARD -->
+        <section class="hud-panel">
+            <div class="chart-controls">
+                <h2 style="font-size: 1rem; color: var(--doom-red);">[ANALYTIC_CHARTS]</h2>
+                <button class="btn-cyber" id="btn-trace" onclick="toggleTraceAnimation()">PLAY_TRACE</button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="chart-container">
+                    <iframe src="/charts/basic_reward.html" class="chart-iframe" id="iframe-reward"></iframe>
+                </div>
+                <div class="chart-container">
+                    <iframe src="/charts/basic_loss.html" class="chart-iframe" id="iframe-loss"></iframe>
+                </div>
+                <div class="chart-container">
+                    <iframe src="/charts/basic_kills.html" class="chart-iframe" id="iframe-kills"></iframe>
+                </div>
+                <div class="chart-container">
+                    <iframe src="/charts/basic_epsilon.html" class="chart-iframe" id="iframe-epsilon"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: AGENT BEHAVIOR COMPARISON -->
+        <section class="hud-panel green-glow">
+            <h2 style="margin-bottom: 20px; font-size: 1rem; color: var(--terminal-green);">[AGENT_PLAYBACK_COMPARISON]</h2>
+            
+            <div class="comparison-grid">
+                <div class="video-wrapper">
+                    <h4 class="video-label">RANDOM_AGENT (<span>EPISODE 1</span>)</h4>
+                    <video src="/videos/basic_random.mp4" class="video-player" id="vid-random" loop muted playsinline></video>
+                </div>
+                <div class="video-wrapper">
+                    <h4 class="video-label" style="color: var(--terminal-green);">TRAINED_AGENT (<span>OPTIMAL</span>)</h4>
+                    <video src="/videos/basic_trained.mp4" class="video-player" id="vid-trained" loop muted playsinline></video>
+                </div>
+            </div>
+            
+            <div class="btn-compare-container">
+                <button class="btn-cyber" style="border-color: var(--doom-red); color: var(--doom-red);" onclick="syncCompareVideos()">COMPARE_TACTICS</button>
+            </div>
+        </section>
+
+        <!-- SECTION 5: DQN ARCHITECTURE PANEL -->
+        <section class="hud-panel">
+            <h2 style="margin-bottom: 25px; font-size: 1rem; color: var(--doom-red);">[DQN_CONVOLUTIONAL_NEURAL_NETWORK]</h2>
+            
+            <div class="net-visualizer">
+                <!-- Stacked Frames Input -->
+                <div class="net-layer">
+                    <div class="net-box input-box">
+                        <span class="net-box-title">INPUT</span>
+                        <span class="net-box-dims">4x84x84</span>
+                    </div>
+                    <span style="color: var(--terminal-green); font-size:0.65rem;" class="hud-font">Stacked Frames</span>
+                </div>
+                <span class="net-arrow">&gt;&gt;</span>
+                
+                <!-- Conv 1 -->
+                <div class="net-layer">
+                    <div class="net-box">
+                        <span class="net-box-title">CONV_1</span>
+                        <span class="net-box-dims">32 @ 8x8</span>
+                    </div>
+                    <span style="font-size:0.65rem; color:#888;" class="hud-font">Stride 4 + ReLU</span>
+                </div>
+                <span class="net-arrow">&gt;&gt;</span>
+
+                <!-- Conv 2 -->
+                <div class="net-layer">
+                    <div class="net-box">
+                        <span class="net-box-title">CONV_2</span>
+                        <span class="net-box-dims">64 @ 4x4</span>
+                    </div>
+                    <span style="font-size:0.65rem; color:#888;" class="hud-font">Stride 2 + ReLU</span>
+                </div>
+                <span class="net-arrow">&gt;&gt;</span>
+
+                <!-- Conv 3 -->
+                <div class="net-layer">
+                    <div class="net-box">
+                        <span class="net-box-title">CONV_3</span>
+                        <span class="net-box-dims">64 @ 3x3</span>
+                    </div>
+                    <span style="font-size:0.65rem; color:#888;" class="hud-font">Stride 1 + ReLU</span>
+                </div>
+                <span class="net-arrow">&gt;&gt;</span>
+
+                <!-- FC Hidden -->
+                <div class="net-layer">
+                    <div class="net-box">
+                        <span class="net-box-title">DENSE_1</span>
+                        <span class="net-box-dims">512 Units</span>
+                    </div>
+                    <span style="font-size:0.65rem; color:#888;" class="hud-font">Fully Connected</span>
+                </div>
+                <span class="net-arrow">&gt;&gt;</span>
+
+                <!-- Output layer -->
+                <div class="net-layer">
+                    <div class="net-box output-box">
+                        <span class="net-box-title">OUTPUT</span>
+                        <span class="net-box-dims" id="net-out-dims">5 Q-Values</span>
+                    </div>
+                    <span style="color: var(--doom-red); font-size:0.65rem;" class="hud-font">Actions</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: RESEARCH FOUNDATION -->
+        <section class="hud-panel green-glow">
+            <h2 style="font-size: 1rem; color: var(--terminal-green);">[RESEARCH_FOUNDATION]</h2>
+            <div class="citation-box">
+                <p style="font-weight: bold; margin-bottom: 8px;">Mnih et al. (2013) — "Playing Atari with Deep Reinforcement Learning"</p>
+                <p style="color: #bbb; font-size: 0.95rem; font-family: sans-serif;">
+                    This project replicates the core convolutional neural network architecture presented by DeepMind in 2013, applying it to high-speed 3D spatial navigation tasks. We extend the baseline framework by implementing local configuration abstractions, shaped continuous distance metrics to bypass rewards sparseness, and custom action combinations mapping multiple buttons to unified inputs.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 7: TECHNICAL SPECS -->
+        <section class="hud-panel">
+            <h2 style="margin-bottom: 20px; font-size: 1rem; color: var(--doom-red);">[SYSTEM_HARDWARE_SPECS]</h2>
+            
+            <table class="specs-table">
+                <tr>
+                    <td class="specs-label">TRAINING_GPU</td>
+                    <td class="specs-value">NVIDIA GeForce RTX 5080 (16GB VRAM, SM 12.0)</td>
+                </tr>
+                <tr>
+                    <td class="specs-label">CUDA_VERSION</td>
+                    <td class="specs-value">12.8</td>
+                </tr>
+                <tr>
+                    <td class="specs-label">PYTORCH_VERSION</td>
+                    <td class="specs-value">2.10.0+cu128</td>
+                </tr>
+                <tr>
+                    <td class="specs-label">AVERAGE_TRAINING_FPS</td>
+                    <td class="specs-value">~550-600 steps/sec (rtx 5080 backpropagation)</td>
+                </tr>
+                <tr>
+                    <td class="specs-label">TOTAL_EXPERIENCES_STORED</td>
+                    <td class="specs-value">110,000 steps across buffers</td>
+                </tr>
+            </table>
+        </section>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

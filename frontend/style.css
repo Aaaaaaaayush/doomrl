@@ -1,0 +1,410 @@
+/* =====================================================================
+   DoomRL Agent — Game Console HUD Style Sheet
+   Aesthetics: Sleek cybernetic dark-mode, neon accents, CRT scanlines
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
+
+:root {
+    --bg-color: #050505;
+    --panel-bg: rgba(15, 15, 15, 0.9);
+    --panel-border: #1a1a1a;
+    
+    /* Neon accents */
+    --doom-red: #FF2400;
+    --doom-red-glow: rgba(255, 36, 0, 0.3);
+    
+    --terminal-green: #00FF41;
+    --terminal-green-glow: rgba(0, 255, 65, 0.35);
+    
+    --accent-blue: #00BFFF;
+    --accent-blue-glow: rgba(0, 191, 255, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ── CRT SCANLINE OVERLAY (CSS ONLY) ────────────────────────────────── */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    aspect-ratio: auto;
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Subtle CRT Flicker */
+@keyframes flicker {
+    0% { opacity: 0.978; }
+    50% { opacity: 0.995; }
+    100% { opacity: 0.982; }
+}
+
+.crt-flicker {
+    animation: flicker 0.15s infinite;
+}
+
+/* ── TYPOGRAPHY UTILITIES ────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+    font-family: 'Press Start 2P', monospace;
+    text-shadow: 0 0 10px var(--doom-red-glow);
+}
+
+.hud-font {
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── PAGE LAYOUT ─────────────────────────────────────────────────────── */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+/* ── PANEL HUD BORDERS ───────────────────────────────────────────────── */
+.hud-panel {
+    background-color: var(--panel-bg);
+    border: 2px solid var(--panel-border);
+    border-radius: 4px;
+    padding: 20px;
+    position: relative;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+}
+
+.hud-panel::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: 10px; right: 10px; height: 2px;
+    background: var(--doom-red);
+    box-shadow: 0 0 8px var(--doom-red);
+}
+
+.hud-panel.green-glow::before {
+    background: var(--terminal-green);
+    box-shadow: 0 0 8px var(--terminal-green);
+}
+
+/* ── HERO BANNER ────────────────────────────────────────────────────── */
+.hero-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-bottom: 3px double var(--doom-red);
+    padding: 40px 20px;
+}
+
+.hero-title {
+    color: var(--doom-red);
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.hero-tagline {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--terminal-green);
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+.hero-showcase-container {
+    width: 100%;
+    max-width: 800px;
+    border: 3px solid var(--panel-border);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+.hero-showcase-gif {
+    width: 100%;
+    display: block;
+    image-rendering: pixelated;
+}
+
+/* ── SCENARIO SELECTOR ───────────────────────────────────────────────── */
+.selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.level-card {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.level-card:hover {
+    border-color: var(--doom-red);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px var(--doom-red-glow);
+}
+
+.level-card.active {
+    border-color: var(--terminal-green);
+    box-shadow: 0 0 15px var(--terminal-green-glow);
+}
+
+.level-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.level-difficulty {
+    color: var(--doom-red);
+    font-size: 0.75rem;
+}
+
+.level-title {
+    font-size: 0.95rem;
+    color: #ffffff;
+}
+
+.level-stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    margin: 6px 0;
+    border-bottom: 1px dotted #222;
+    padding-bottom: 3px;
+}
+
+.level-stat-value {
+    color: var(--terminal-green);
+}
+
+/* ── PLOTLY CHARTS PANEL ─────────────────────────────────────────────── */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-container {
+    height: 400px;
+    background-color: rgba(5, 5, 5, 0.5);
+    border: 1px solid #1f1f1f;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.chart-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+}
+
+.chart-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.btn-cyber {
+    background: transparent;
+    border: 1px solid var(--terminal-green);
+    color: var(--terminal-green);
+    padding: 8px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.65rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+.btn-cyber:hover {
+    background-color: var(--terminal-green-glow);
+    box-shadow: 0 0 10px var(--terminal-green);
+}
+
+/* ── VIDEO COMPARISON PLAYER ─────────────────────────────────────────── */
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.video-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.video-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #888;
+}
+
+.video-label span {
+    color: var(--doom-red);
+}
+
+.video-player {
+    width: 100%;
+    max-width: 550px;
+    border: 2px solid var(--panel-border);
+    background-color: #000;
+    border-radius: 2px;
+}
+
+.btn-compare-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+/* ── NEURAL NETWORK ARCHITECTURE PANEL ────────────────────────────────── */
+.net-visualizer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 45px 15px;
+    background: linear-gradient(180deg, rgba(10,10,10,0.8), rgba(5,5,5,0.95));
+    border-radius: 4px;
+    border: 1px solid #1a1a1a;
+    overflow-x: auto;
+}
+
+.net-layer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    min-width: 120px;
+}
+
+.net-box {
+    width: 90px;
+    height: 90px;
+    border: 2px solid var(--accent-blue);
+    background-color: rgba(0, 191, 255, 0.05);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 12px var(--accent-blue-glow);
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.net-box.input-box {
+    border-color: var(--terminal-green);
+    background-color: rgba(0, 255, 65, 0.05);
+    box-shadow: 0 0 12px var(--terminal-green-glow);
+}
+
+.net-box.output-box {
+    border-color: var(--doom-red);
+    background-color: rgba(255, 36, 0, 0.05);
+    box-shadow: 0 0 12px var(--doom-red-glow);
+}
+
+.net-box-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.net-box-dims {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.net-arrow {
+    font-size: 1.5rem;
+    color: #444;
+    font-family: 'Share Tech Mono', monospace;
+    animation: flowPulse 1.5s infinite;
+}
+
+@keyframes flowPulse {
+    0% { color: #333; transform: scale(1); }
+    50% { color: var(--accent-blue); transform: scale(1.1); }
+    100% { color: #333; transform: scale(1); }
+}
+
+/* ── CITATION CARD ──────────────────────────────────────────────────── */
+.citation-box {
+    border-left: 3px solid var(--doom-red);
+    padding-left: 15px;
+    margin-top: 15px;
+    font-family: 'Share Tech Mono', monospace;
+    background-color: rgba(5,5,5,0.4);
+    padding: 15px;
+    border-radius: 2px;
+}
+
+/* ── TECHNICAL SPECS TABLE ───────────────────────────────────────────── */
+.specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+}
+
+.specs-table td {
+    padding: 10px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.specs-table tr:last-child td {
+    border-bottom: none;
+}
+
+.specs-label {
+    color: #888;
+}
+
+.specs-value {
+    text-align: right;
+    color: var(--terminal-green);
+}

@@ -1,0 +1,44 @@
+# ============================================================
+# Scenario 2: Defend the Center
+# Enemies spawn from all directions. Stay alive and shoot.
+# New challenge: Enemy positions are dynamic — cannot memorize
+# ============================================================
+
+scenario:
+  name: defend_the_center
+  wad_file: defend_the_center.wad
+  description: "Enemies from all directions — survive as long as possible"
+  difficulty: 3
+
+environment:
+  screen_width: 160
+  screen_height: 120
+  frame_skip: 4
+  stack_frames: 4
+  grayscale: true
+
+training:
+  total_episodes: 2000            # More episodes — harder scenario
+  max_steps_per_episode: 2000     # Agent survives longer as it improves
+
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay_steps: 100000     # Slower decay — environment is harder to explore
+
+  replay_buffer_size: 50000
+  batch_size: 32
+  learning_starts: 5000
+
+  gamma: 0.99
+  learning_rate: 0.00025
+  target_network_update_freq: 1000
+
+model:
+  save_dir: models/defend_the_center/
+  save_every: 100
+  checkpoint_name: dqn_defend
+
+logging:
+  mlflow_experiment: "DoomRL-DefendCenter"
+  log_every: 10
+  log_dir: logs/defend_the_center/

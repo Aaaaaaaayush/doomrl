@@ -1,0 +1,48 @@
+# DoomRL Agent — Requirements
+# =====================================================================
+# HOW TO INSTALL:
+#   Step 1 — Install PyTorch (must use cu128 wheel index):
+#     pip install torch==2.10.0+cu128 torchvision==0.25.0+cu128 \
+#         --index-url https://download.pytorch.org/whl/cu128
+#
+#   Step 2 — Install everything else:
+#     pip install -r requirements.txt
+#
+# WHY TWO STEPS: PyTorch's GPU wheels are not on PyPI.
+# If you pip install from this file alone, pip will install the
+# CPU-only PyTorch from PyPI, which will NOT work on the RTX 5080.
+# =====================================================================
+
+# ── Core ML ──────────────────────────────────────────────────────────
+numpy==1.26.4                  # Numerical arrays (must match existing env)
+scipy==1.11.4                  # Scientific computing
+
+# ── ViZDoom — The game environment ───────────────────────────────────
+vizdoom>=1.2.0                 # ViZDoom Python API (installs latest stable)
+
+# ── Computer Vision / Frame Processing ───────────────────────────────
+opencv-python>=4.8.0           # Frame resizing, grayscale conversion, video recording
+pillow>=10.0.0                 # Image I/O
+
+# ── Experiment Tracking ───────────────────────────────────────────────
+mlflow>=2.10.0                 # Training metrics, model registry, artifact logging
+
+# ── Visualization ────────────────────────────────────────────────────
+plotly>=5.18.0                 # Interactive charts for the dashboard
+kaleido>=0.2.1                 # Export Plotly charts as static images for README
+
+# ── Video Recording ───────────────────────────────────────────────────
+imageio>=2.31.0                # Write GIFs
+imageio-ffmpeg>=0.4.9          # Write MP4 videos (requires ffmpeg)
+
+# ── Configuration ─────────────────────────────────────────────────────
+pyyaml>=6.0                    # Read YAML config files
+
+# ── Backend API ───────────────────────────────────────────────────────
+fastapi>=0.110.0               # Web framework for the dashboard backend
+uvicorn[standard]>=0.29.0      # ASGI server to run FastAPI
+python-multipart>=0.0.9        # Required for FastAPI file uploads
+
+# ── Utilities ─────────────────────────────────────────────────────────
+tqdm>=4.66.0                   # Progress bars during training
+python-dotenv>=1.0.0           # Load .env files (Oracle Cloud config)
