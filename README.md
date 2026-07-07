@@ -12,6 +12,12 @@ An academic portfolio project demonstrating a deep reinforcement learning agent 
 
 Deployed demo: [aayush-doomrl.duckdns.org](https://aayush-doomrl.duckdns.org)
 
+<br>
+<p align="center">
+  <img src="videos/corridor_trained.gif" alt="DoomRL Corridor Agent Gameplay" width="550">
+</p>
+<br>
+
 ---
 
 ## Abstract
@@ -75,10 +81,8 @@ Below is a demonstration comparing the untrained agent at Episode 1 against the 
 
 | Random Agent (Episode 1) | Trained Agent (Episode 3000) |
 | :---: | :---: |
-| ![Random Behavior](videos/corridor_showcase.gif) | ![Trained Behavior](videos/corridor_showcase.gif) |
+| ![Random Behavior](videos/corridor_random.gif) | ![Trained Behavior](videos/corridor_trained.gif) |
 | *Chaotic circles, stands still, gets eliminated instantly.* | *Navigates forward, turns and fires, targets enemies.* |
-
-*(Note: Replace with your final side-by-side comparison files on your github repository).*
 
 ---
 
@@ -98,7 +102,7 @@ Below is a demonstration comparing the untrained agent at Episode 1 against the 
 
 *   **The Moving Target Problem**: Implementing a standard DQN proved highly unstable until the Target Network was synced at set intervals. Uncoupling the Q-value prediction from the update goal is essential for convergence.
 *   **Why Experience Replay Matters**: Removing the Replay Buffer caused the agent to quickly overfit to the local wall textures it was currently looking at, leading to catastrophic forgetting of previous angles. Shuffling training batches breaks temporal correlations.
-*   **Reward Shaping Challenges**: In Deadly Corridor, progress coordinate calculations were originally failing due to configuration limits. Once local `.cfg` files were adjusted to output 2D positioning variables, the distance progress gradient acted as a guide, pulling the agent to the end of the level.
+*   **Reward Shaping & Engine Variable Exposure (Key Discovery)**: In 3D navigation games like Doom, reward signals are naturally sparse (e.g., scoring only when reaching the exit). However, default ViZDoom configurations do not output the player's internal coordinate variables. By overriding the local engine `.cfg` files to output `POSITION_X` and `POSITION_Y`, we were able to compute the Euclidean distance to the exit goal $(0, 512)$. This dense, shaped reward curve gave the agent step-by-step progress feedback, transforming the learning curve from a flat line of failures into a steady gradient of navigation success.
 
 ---
 

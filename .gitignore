@@ -17,7 +17,9 @@ build/
 models/
 
 # Videos (large binary files)
-videos/
+videos/*
+!videos/corridor_random.gif
+!videos/corridor_trained.gif
 
 # MLflow artifacts and run data
 logs/mlflow/
@@ -44,3 +46,6 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
+
+# Deployment guide
+deployment_instructions.md
